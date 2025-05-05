@@ -119,8 +119,7 @@ public class ReporteService {
             Row headerRow = sheet.createRow(0);
             String[] columns = {"ID", "Num. Guía", "Partida", "OS", "Proveedor",
                     "Fecha Ingreso", "Cliente", "Marca", "OP", "Tipo Tela",
-                    "Descripción", "Ench", "Rollos", "Peso", "Stock Real",
-                    "Estado", "Almacén", "Fecha Creación", "Fecha Act."};  // Incluir nuevos campos
+                    "Descripción", "Ench", "Rollos", "Peso", "Stock Real", "Almacén", "Estado"};
 
             // Configurar estilos
             CellStyle headerStyle = crearEstiloEncabezado(workbook);
@@ -170,10 +169,12 @@ public class ReporteService {
                 agregarCeldaDecimal(row, colIdx++, tela.getStockReal(), decimalStyle);
 
                 // Nuevos campos
-                agregarCeldaTexto(row, colIdx++, tela.getEstado());
                 agregarCeldaTexto(row, colIdx++, tela.getAlmacen());
+                agregarCeldaTexto(row, colIdx++, tela.getEstado());
 
                 // Fechas de creación y actualización
+
+                /*
                 Cell cellCreacion = row.createCell(colIdx++);
                 if (tela.getFechaCreacion() != null) {
                     cellCreacion.setCellValue(Date.from(tela.getFechaCreacion().atZone(ZoneId.systemDefault()).toInstant()));
@@ -185,6 +186,9 @@ public class ReporteService {
                     cellActualizacion.setCellValue(Date.from(tela.getFechaActualizacion().atZone(ZoneId.systemDefault()).toInstant()));
                     cellActualizacion.setCellStyle(dateStyle);
                 }
+
+                 */
+
             }
 
             // Ajustar ancho de columnas automáticamente
@@ -242,8 +246,8 @@ public class ReporteService {
             // Agregar encabezados
             String[] headers = {"ID", "Num. Guía", "Partida", "OS", "Proveedor",
                     "Fecha Ingreso", "Cliente", "Marca", "OP", "Tipo Tela",
-                    "Descripción", "Ench", "Rollos", "Peso", "Stock",
-                    "Estado", "Almacén", "Creación", "Act."};
+                    "Descripción", "Ench", "Rollos", "Peso", "Stock", "Almacén",
+                    "Estado"};
 
             for (String header : headers) {
                 PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
@@ -272,10 +276,11 @@ public class ReporteService {
                 addCell(table, formatearDecimal(tela.getStockReal()), normalFont);
 
                 // Nuevos campos
-                addCell(table, tela.getEstado(), normalFont);
+
                 addCell(table, tela.getAlmacen(), normalFont);
-                addCell(table, formatearFechaHora(tela.getFechaCreacion()), normalFont);
-                addCell(table, formatearFechaHora(tela.getFechaActualizacion()), normalFont);
+                addCell(table, tela.getEstado(), normalFont);
+                // addCell(table, formatearFechaHora(tela.getFechaCreacion()), normalFont);
+                // addCell(table, formatearFechaHora(tela.getFechaActualizacion()), normalFont);
             }
 
             document.add(table);
@@ -435,6 +440,11 @@ public class ReporteService {
         if (cumpleFiltros && filtros.getAlmacen() != null && !filtros.getAlmacen().isEmpty()) {
             cumpleFiltros = cumpleFiltros && tela.getAlmacen() != null &&
                     tela.getAlmacen().toLowerCase().contains(filtros.getAlmacen().toLowerCase());
+        }
+
+        if (cumpleFiltros && filtros.getTipoTela() != null && !filtros.getTipoTela().isEmpty()) {
+            cumpleFiltros = cumpleFiltros && tela.getTipoTela() != null &&
+                    tela.getTipoTela().toLowerCase().contains(filtros.getTipoTela().toLowerCase());
         }
 
         // Filtros de fecha

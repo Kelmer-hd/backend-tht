@@ -56,7 +56,8 @@ public class SecurityConfig {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowedOrigins(Arrays.asList(
                 "http://localhost:4200",    // Angular dev server
-                "http://127.0.0.1:4200"     // Angular usando IP literal
+                "http://127.0.0.1:4200",
+                "https://vqjtgbj6-4200.brs.devtunnels.ms/"
         ));
         corsConfig.setMaxAge(3600L);
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
